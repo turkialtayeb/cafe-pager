@@ -22,7 +22,7 @@ import {getFirestore,doc,setDoc,updateDoc,collection,onSnapshot,query,orderBy,li
 const app=initializeApp(FB.config),auth=getAuth(app),db=getFirestore(app),$=i=>document.getElementById(i);
 const esc=s=>String(s).replace(/[<>&"']/g,''),fmt=s=>Math.floor(s/60)+':'+('0'+s%60).slice(-2);
 let list=[],started=false;
-$('in').onclick=()=>signInWithEmailAndPassword(auth,$('em').value,$('pw').value).catch(()=>$('le').textContent='الإيميل أو كلمة المرور غلط');
+$('in').onclick=()=>signInWithEmailAndPassword(auth,$('em').value,$('pw').value).catch(e=>$('le').textContent=e.code);
 $('so').onclick=()=>signOut(auth);
 onAuthStateChanged(auth,u=>{$('login').hidden=!!u;$('app').hidden=!u;if(u&&!started){started=true;start()}});
 function start(){
