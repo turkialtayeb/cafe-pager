@@ -1,10 +1,10 @@
 <!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>تتبع الطلب</title><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#143830">
+<title>تتبع الطلب</title><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#f1e6d0">
 <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css"></head><body>
 <main class="scr" id="scr">
-  <header class="chead"><img class="logo" src="logo.png" alt="" onerror="this.remove()"><div class="brand" id="bn"></div></header>
+  <header class="chead"><img class="logo big" src="logo.png" alt="قاهي" onload="document.getElementById('bn').hidden=true" onerror="this.remove()"><div class="brand" id="bn"></div></header>
   <section class="mid" id="v-in">
     <div class="sub">تابع طلبك من جوالك</div>
     <input id="in" type="text" inputmode="numeric" autocomplete="off" placeholder="رقم الطلب" aria-label="رقم الطلب">
@@ -13,12 +13,12 @@
   </section>
   <section class="mid" id="v-wait" hidden>
     <div class="sub">طلب رقم <b id="wn"></b></div>
-    <div class="ring"><svg width="220" height="220"><circle cx="110" cy="110" r="100" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="10"/><circle id="arc" cx="110" cy="110" r="100" fill="none" stroke="#e0a244" stroke-width="10" stroke-linecap="round"/></svg><div class="in"><div class="t" id="cd"></div><div class="sub">الوقت المتوقع</div></div></div>
+    <div class="ring"><svg width="220" height="220"><circle cx="110" cy="110" r="100" fill="none" stroke="#dccfb4" stroke-width="10"/><circle id="arc" cx="110" cy="110" r="100" fill="none" stroke="#586d54" stroke-width="10" stroke-linecap="round"/></svg><div class="in"><div class="t" id="cd"></div><div class="sub">الوقت المتوقع</div></div></div>
     <div class="sub" id="ps"></div>
   </section>
   <section class="mid" id="v-ready" hidden>
     <div style="font-size:28px;font-weight:700">طلبك جاهز</div><div class="bign" id="rn"></div><div>تفضل بالاستلام من الكاونتر</div>
-    <button class="cta" style="background:#2a1a05;color:#fff" id="got">استلمت طلبي</button>
+    <button class="cta" style="background:#f1e6d0;color:#934713" id="got">استلمت طلبي</button>
   </section>
 </main>
 <script src="firebase-config.js"></script>
