@@ -1,0 +1,69 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>لوحة الطلبات</title>
+<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"></head><body>
+<div id="login" class="lg"><div class="lgc">
+  <img class="logo" src="logo.png" alt="" onerror="this.remove()"><div class="brand">لوحة الطلبات</div><div class="sub">سجّل دخولك للمتابعة</div>
+  <input id="em" type="email" placeholder="الإيميل" dir="ltr" autocomplete="username"><input id="pw" type="password" placeholder="كلمة المرور" dir="ltr" autocomplete="current-password">
+  <button id="in">دخول</button><div id="le" class="er"></div></div></div>
+<div id="app" hidden>
+  <header class="top"><div class="who"><img class="logo" style="height:36px" src="logo.png" alt="" onerror="this.remove()"><span id="cname">لوحة الطلبات</span></div>
+    <nav><button class="tab on" data-t="orders">الطلبات</button><button class="tab" data-t="set">الإعدادات والباركود</button></nav>
+    <button class="ghost" id="so">خروج</button></header>
+  <main class="wrap"><div id="msg"></div>
+    <section id="t-orders">
+      <div class="card add"><input id="nn" type="text" inputmode="numeric" autocomplete="off" placeholder="رقم الطلب" aria-label="رقم الطلب">
+        <div class="chips" id="chips" aria-label="الوقت بالدقائق"></div><button id="ad">إضافة الطلب</button></div>
+      <div class="stats"><div class="stat"><b id="s1">0</b>قيد التحضير</div><div class="stat"><b id="s2">0</b>جاهزة للاستلام</div></div>
+      <div class="cols"><div class="col"><h3>قيد التحضير</h3><div id="L1"></div></div><div class="col"><h3>جاهزة للاستلام</h3><div id="L2"></div></div></div>
+    </section>
+    <section id="t-set" hidden>
+      <div class="card"><h3>اسم الكوفي</h3><div class="row"><input id="cn" style="flex:1;min-width:200px"><button id="sv">حفظ</button></div>
+        <p class="sub">لوقو الكوفي: ارفع ملف باسم logo.png في GitHub بجانب باقي الملفات.</p></div>
+      <div class="card"><h3>باركود الموقع</h3><div class="row"><input id="url" dir="ltr" style="flex:1;min-width:220px"><button id="mq">تحديث</button><button id="pr">طباعة الملصق</button></div><div id="qr"></div></div>
+    </section>
+  </main>
+</div>
+<div id="poster" hidden><img class="logo" style="margin:0 auto 10px;height:80px" src="logo.png" alt="" onerror="this.remove()"><div class="brand" id="pn" style="font-size:48px"></div><p style="font-size:22px">امسح الباركود وتابع طلبك من جوالك</p><div id="qr2" style="display:inline-block;background:#fff;padding:12px"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="firebase-config.js"></script>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import {getFirestore,doc,setDoc,updateDoc,collection,onSnapshot,query,orderBy,limit} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+const BAD=/XXXX|YOUR-|0000000000/.test(JSON.stringify(FB.config)),$=i=>document.getElementById(i);
+const esc=s=>String(s).replace(/[<>&"']/g,''),fmt=s=>Math.floor(s/60)+':'+('0'+s%60).slice(-2),secs=e=>Math.max(0,Math.ceil((e-Date.now())/1000));
+const norm=s=>s.replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776).trim();
+const H={'auth/invalid-credential':'الإيميل أو كلمة المرور غلط','auth/invalid-email':'صيغة الإيميل غلط','auth/operation-not-allowed':'فعّل Email/Password من Authentication','auth/unauthorized-domain':'أضف النطاق في Authorized domains','auth/network-request-failed':'مشكلة اتصال','auth/too-many-requests':'محاولات كثيرة، انتظر شوي'};
+let list=[],started=false,mins=10,cafe='',auth,db;
+if(BAD)$('le').textContent='إعدادات Firebase ما انضبطت في ملف firebase-config.js';
+else{const app=initializeApp(FB.config);auth=getAuth(app);db=getFirestore(app);
+  onAuthStateChanged(auth,u=>{$('login').hidden=!!u;$('app').hidden=!u;if(u&&!started){started=true;start()}})}
+const login=()=>{$('le').textContent='';signInWithEmailAndPassword(auth,$('em').value.trim(),$('pw').value).catch(e=>$('le').textContent=(H[e.code]||'خطأ')+' ['+e.code+']')};
+$('in').onclick=login;$('pw').onkeydown=e=>{if(e.key==='Enter')login()};$('so').onclick=()=>signOut(auth);
+const run=async f=>{try{$('msg').textContent='';await f()}catch(e){$('msg').textContent=e.code==='permission-denied'?'ما عندك صلاحية: تأكد إن إيميل الأدمن في firestore.rules مطابق لإيميل دخولك وإنك نشرت القواعد':('تعذر التنفيذ: '+(e.code||e.message))}};
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));$('t-orders').hidden=b.dataset.t!=='orders';$('t-set').hidden=b.dataset.t!=='set'});
+$('chips').innerHTML=[5,10,15,20,30].map(m=>'<button class="chip'+(m===10?' on':'')+'" data-m="'+m+'">'+m+' د</button>').join('');
+$('chips').onclick=e=>{const m=e.target.dataset.m;if(!m)return;mins=+m;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.m===m))};
+function start(){
+  $('url').value=location.href.split('?')[0].replace(/admin\.html.*$/,'');
+  onSnapshot(doc(db,'settings','main'),s=>{cafe=s.exists()?s.data().name:'';$('cname').textContent=cafe||'لوحة الطلبات';if(document.activeElement!==$('cn'))$('cn').value=cafe;$('pn').textContent=cafe;mq()},()=>{});
+  onSnapshot(query(collection(db,'orders'),orderBy('createdAt','desc'),limit(100)),s=>{list=s.docs.map(d=>d.data());render()},e=>{$('msg').textContent=e.code==='permission-denied'?'ما عندك صلاحية: تأكد من إيميل الأدمن في firestore.rules وانشر القواعد':e.code});
+  setInterval(tickAll,1000)}
+$('sv').onclick=()=>run(async()=>{await setDoc(doc(db,'settings','main'),{name:$('cn').value.trim()})});
+$('ad').onclick=()=>run(async()=>{const n=norm($('nn').value);if(!n)return;
+  await setDoc(doc(db,'orders',n),{number:n,eta:Date.now()+mins*60000,total:mins*60,status:'preparing',tokens:[],createdAt:Date.now()});$('nn').value='';$('nn').focus()});
+$('nn').onkeydown=e=>{if(e.key==='Enter')$('ad').click()};
+window.adj=(n,d)=>run(async()=>{const o=list.find(x=>x.number===n),eta=Math.max(Date.now()+30000,o.eta+d*60000);await updateDoc(doc(db,'orders',n),{eta,total:Math.max(o.total,secs(eta))})});
+window.st=(n,s)=>run(()=>updateDoc(doc(db,'orders',n),{status:s}));
+function render(){let a='',b='',x=0,y=0;
+  list.filter(o=>o.status==='preparing').sort((p,q)=>p.eta-q.eta).forEach(o=>{x++;const n=esc(o.number);
+    a+='<div class="o"><div class="h"><span class="n">'+n+'</span><span class="c" data-e="'+o.eta+'"></span></div><div class="acts"><button onclick="adj(\''+n+'\',-2)">−2</button><button onclick="adj(\''+n+'\',2)">+2</button><button onclick="adj(\''+n+'\',5)">+5</button><button class="ok" onclick="st(\''+n+'\',\'ready\')">جاهز</button></div></div>'});
+  list.filter(o=>o.status==='ready').forEach(o=>{y++;const n=esc(o.number);
+    b+='<div class="o done"><div class="h"><span class="n">'+n+'</span><button onclick="st(\''+n+'\',\'picked\')">تم التسليم</button></div></div>'});
+  $('L1').innerHTML=a||'<div class="empty">ما فيه طلبات قيد التحضير</div>';$('L2').innerHTML=b||'<div class="empty">ما فيه طلبات جاهزة</div>';
+  $('s1').textContent=x;$('s2').textContent=y;tickAll()}
+function tickAll(){document.querySelectorAll('[data-e]').forEach(e=>e.textContent=fmt(secs(+e.dataset.e)))}
+function mq(){if(!window.QRCode)return;['qr','qr2'].forEach(id=>{$(id).innerHTML='';new QRCode($(id),{text:$('url').value,width:id==='qr'?200:300,height:id==='qr'?200:300})})}
+$('mq').onclick=mq;$('pr').onclick=()=>{mq();$('poster').hidden=false;print();$('poster').hidden=true};
+</script></body></html>
