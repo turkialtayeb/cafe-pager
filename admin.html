@@ -55,7 +55,7 @@ $('ad').onclick=()=>run(async()=>{const n=norm($('nn').value);if(!n)return;
   await setDoc(doc(db,'orders',n),{number:n,eta:Date.now()+mins*60000,total:mins*60,status:'preparing',tokens:[],createdAt:Date.now()});$('nn').value='';$('nn').focus()});
 $('nn').onkeydown=e=>{if(e.key==='Enter')$('ad').click()};
 window.adj=(n,d)=>run(async()=>{const o=list.find(x=>x.number===n),eta=Math.max(Date.now()+30000,o.eta+d*60000);await updateDoc(doc(db,'orders',n),{eta,total:Math.max(o.total,secs(eta))})});
-window.st=(n,s)=>run(()=>updateDoc(doc(db,'orders',n),{status:s}));
+window.st=(n,s)=>run(()=>updateDoc(doc(db,'orders',n),s==='ready'?{status:s,readyAt:Date.now()}:{status:s}));
 function render(){let a='',b='',x=0,y=0;
   list.filter(o=>o.status==='preparing').sort((p,q)=>p.eta-q.eta).forEach(o=>{x++;const n=esc(o.number);
     a+='<div class="o"><div class="h"><span class="n">'+n+'</span><span class="c" data-e="'+o.eta+'"></span></div><div class="acts"><button onclick="adj(\''+n+'\',-2)">−2</button><button onclick="adj(\''+n+'\',2)">+2</button><button onclick="adj(\''+n+'\',5)">+5</button><button class="ok" onclick="st(\''+n+'\',\'ready\')">جاهز</button></div></div>'});
