@@ -3,55 +3,55 @@
 <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-body{overflow:hidden}
-.board{height:100dvh;display:grid;grid-template-columns:40% 1fr;gap:24px;padding:24px}
-.left{background:var(--paper);border:1px solid var(--line);border-radius:32px;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:12px;text-align:center}
-.left .logo{height:clamp(50px,9vh,100px)}
-.left h1{margin:0;font-size:clamp(26px,3.2vw,52px);color:var(--brown);line-height:1.25}
-#qr{background:#fffdf7;padding:14px;border-radius:22px;border:6px solid var(--olive);line-height:0}
-.how{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
-.how div{background:var(--beige);border-radius:18px;padding:12px;font-size:clamp(12px,1.35vw,20px);line-height:1.6;text-align:right}
-.how b{color:var(--brown);display:block}
-.right{display:flex;flex-direction:column;gap:20px;min-height:0}
-.panel{background:var(--paper);border:1px solid var(--line);border-radius:32px;padding:24px;min-height:0;overflow:hidden}
-.panel.rd{flex:3}.panel.pp{flex:2}
-.panel h2{margin:0 0 14px;font-size:clamp(20px,2.4vw,36px);color:var(--mute)}
-.nums{display:flex;flex-wrap:wrap;gap:14px}
-.num{font-family:'Reem Kufi',serif;line-height:1;padding:10px 28px;border-radius:26px}
-.rd .num{font-size:clamp(56px,8vw,130px);background:var(--brown);color:var(--beige)}
-.rd .num.new{animation:pop .8s 4}@keyframes pop{50%{transform:scale(1.15)}}
-.pp .num{font-size:clamp(30px,3.8vw,60px);background:var(--beige);color:var(--olive)}
-@media(prefers-reduced-motion:reduce){.rd .num.new{animation:none}}
-#snd{position:fixed;bottom:10px;left:10px;opacity:.5;font-size:12px;padding:6px 10px}
-#msg{position:fixed;top:6px;right:50%;transform:translateX(50%)}
+body{height:100dvh;overflow:hidden}
+.d{height:100dvh;display:flex;flex-direction:column;align-items:center;padding:2.2vh 3vw;gap:1.4vh}
+.hd{display:flex;align-items:center;gap:2vw}.hd img{height:8vh}.hd h1{margin:0;font-size:5vh;color:var(--brown)}
+.row3{flex:1;display:flex;align-items:center;justify-content:center;gap:4vw;width:100%;min-height:0}
+.qc{display:flex;flex-direction:column;align-items:center;gap:1.2vh}
+.pl{background:var(--olive);color:var(--beige);border-radius:40px;padding:.6vh 2.4vh;font-size:2.8vh;font-weight:700}
+.qb{background:#fffdf7;border:.9vh solid var(--olive);border-radius:3vh;padding:1.4vh;line-height:0}
+.pg svg{height:42vh;display:block;filter:drop-shadow(0 1.2vh 1.2vh rgba(58,42,28,.25))}
+.strip{display:flex;align-items:center;gap:1.4vw;min-height:7vh;flex-wrap:wrap;justify-content:center}
+.strip b{color:var(--mute);font-size:2.6vh}.strip span.n{font-family:'Reem Kufi',serif;font-size:4.6vh;background:var(--brown);color:var(--beige);border-radius:2vh;padding:.4vh 2vh}
+.strip span.n.new{animation:pop .8s 4}@keyframes pop{50%{transform:scale(1.15)}}
+.pills{display:flex;gap:1.4vw}.pills span{background:var(--paper);border:1px solid var(--line);border-radius:40px;padding:.8vh 2.4vh;font-size:2.4vh;font-weight:700;color:var(--olive)}
+#snd{position:fixed;bottom:6px;left:6px;opacity:.4;font-size:11px;padding:5px 9px}
+@media(prefers-reduced-motion:reduce){.strip span.n.new{animation:none}}
 </style></head><body>
 <div id="login" class="lg"><div class="lgc"><img class="logo" src="logo.png" alt="" onerror="this.remove()"><div class="brand">شاشة العرض</div><div class="sub">سجّل دخول الأدمن مرة وحدة على الآيباد</div>
 <input id="em" type="email" placeholder="الإيميل" dir="ltr"><input id="pw" type="password" placeholder="كلمة المرور" dir="ltr"><button id="in">دخول</button><div id="le" class="er"></div></div></div>
-<main class="board">
-  <section class="left"><img class="logo" src="logo.png" alt="" onerror="this.remove()"><h1>امسح الكود<br>لتتبع طلبك</h1><div id="qr"></div>
-    <div class="how"><div><b>آيفون</b>امسح الكود، ثم مشاركة &larr; إضافة إلى الشاشة الرئيسية، وافتحه من الأيقونة</div><div><b>أندرويد</b>امسح الكود، واكتب رقم طلبك، ووافق على التنبيهات</div></div></section>
-  <section class="right"><div class="panel rd"><h2>جاهز للاستلام</h2><div class="nums" id="R"></div></div><div class="panel pp"><h2>قيد التحضير</h2><div class="nums" id="P"></div></div></section>
+<main class="d">
+  <div class="hd"><img src="logo.png" alt="" onerror="this.remove()"><h1>امسح الكود لتتبع طلبك</h1></div>
+  <div class="row3">
+    <div class="qc"><span class="pl">آيفون</span><div class="qb" id="q1"></div></div>
+    <div class="pg"><svg viewBox="0 0 200 250" role="img" aria-label="بيجر"><rect x="86" y="4" width="28" height="50" rx="12" fill="#586d54"/><rect x="14" y="40" width="172" height="204" rx="42" fill="#fbf6ea" stroke="#dccfb4" stroke-width="3"/><rect x="38" y="64" width="124" height="100" rx="20" fill="#934713"/><text id="dn" x="100" y="128" text-anchor="middle" font-size="62" font-weight="700" fill="#f1e6d0" font-family="Reem Kufi,Tajawal,sans-serif">—</text><circle cx="100" cy="208" r="20" fill="#586d54"/></svg></div>
+    <div class="qc"><span class="pl">أندرويد</span><div class="qb" id="q2"></div></div>
+  </div>
+  <div class="strip" id="R"></div>
+  <div class="pills"><span>بدون تحميل أي تطبيق</span><span>فعّل التنبيهات</span><span>شيل الصامت</span></div>
 </main>
-<div id="msg" class="er"></div><button id="snd">تفعيل صوت الشاشة</button>
+<button id="snd">تفعيل صوت الشاشة</button>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="firebase-config.js"></script>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import {getAuth,signInWithEmailAndPassword,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import {getFirestore,collection,onSnapshot,query,orderBy,limit} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import {getFirestore,doc,collection,onSnapshot,query,orderBy,limit} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 const $=i=>document.getElementById(i),esc=s=>String(s).replace(/[<>&"']/g,'');
-let ac=null,seen=null,sub=null;
-const s=Math.round(Math.min(innerWidth*.28,innerHeight*.42));
-new QRCode($('qr'),{text:location.href.split('?')[0].replace(/display\.html.*$/,''),width:s,height:s});
+const base=location.href.split('?')[0].replace(/display\.html.*$/,'');
+let ac=null,seen=null,sub=null,order='',shown=null;
+function qrs(){const s=Math.round(Math.min(innerHeight*.38,innerWidth*.24)),u=order?base+'?o='+encodeURIComponent(order):base,k=u+s;if(k===shown)return;shown=k;
+  ['q1','q2'].forEach(id=>{$(id).innerHTML='';new QRCode($(id),{text:u,width:s,height:s})});$('dn').textContent=order||'—'}
+addEventListener('resize',qrs);
 function chime(){if(!ac)return;[880,1175,1568].forEach((f,i)=>{const t=ac.currentTime+i*.22,o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.35,t+.03);g.gain.exponentialRampToValueAtTime(.001,t+.6);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.65)})}
 $('snd').onclick=()=>{ac=ac||new(window.AudioContext||window.webkitAudioContext)();ac.resume();chime();$('snd').textContent='الصوت مفعّل'};
 const app=initializeApp(FB.config),auth=getAuth(app),db=getFirestore(app);
 const login=()=>signInWithEmailAndPassword(auth,$('em').value.trim(),$('pw').value).catch(e=>$('le').textContent='الإيميل أو كلمة المرور غلط ['+e.code+']');
 $('in').onclick=login;$('pw').onkeydown=e=>{if(e.key==='Enter')login()};
-onAuthStateChanged(auth,u=>{$('login').hidden=!!u;if(u&&!sub)sub=onSnapshot(query(collection(db,'orders'),orderBy('createdAt','desc'),limit(100)),x=>draw(x.docs.map(d=>d.data())),e=>$('msg').textContent=e.code)});
-function draw(l){
-  const rd=l.filter(o=>o.status==='ready').sort((a,b)=>(b.readyAt||0)-(a.readyAt||0)),pp=l.filter(o=>o.status==='preparing').sort((a,b)=>a.eta-b.eta);
+qrs();
+onSnapshot(doc(db,'settings','display'),s=>{order=s.exists()?s.data().order:'';qrs()},()=>{});
+onAuthStateChanged(auth,u=>{$('login').hidden=!!u;if(u&&!sub)sub=onSnapshot(query(collection(db,'orders'),orderBy('createdAt','desc'),limit(100)),x=>draw(x.docs.map(d=>d.data())),()=>{})});
+function draw(l){const rd=l.filter(o=>o.status==='ready').sort((a,b)=>(b.readyAt||0)-(a.readyAt||0));
   const fresh=seen?rd.filter(o=>!seen.has(o.number)).map(o=>o.number):[];seen=new Set(rd.map(o=>o.number));if(fresh.length)chime();
-  $('R').innerHTML=rd.map(o=>'<span class="num'+(fresh.includes(o.number)?' new':'')+'">'+esc(o.number)+'</span>').join('')||'<div class="sub">ما فيه طلبات جاهزة حالياً</div>';
-  $('P').innerHTML=pp.map(o=>'<span class="num">'+esc(o.number)+'</span>').join('')||'<div class="sub">ما فيه طلبات قيد التحضير</div>'}
+  $('R').innerHTML=rd.length?'<b>جاهز للاستلام:</b>'+rd.map(o=>'<span class="n'+(fresh.includes(o.number)?' new':'')+'">'+esc(o.number)+'</span>').join(''):''}
 </script></body></html>

@@ -1,69 +1,87 @@
 <!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>لوحة الطلبات</title>
 <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css"></head><body>
+<link rel="stylesheet" href="style.css"><style>#nn{width:230px!important;font-size:18px!important;font-weight:400!important}</style></head><body>
+<script>(function(){function show(m){var d=document.getElementById('le');if(d)d.textContent=m}
+addEventListener('error',function(e){var t=e.target;if(t&&t.src)show('Failed to load: '+t.src.split('/').pop());else show('Error: '+(e.message||''))},true);
+addEventListener('unhandledrejection',function(e){show('Error: '+((e.reason&&(e.reason.code||e.reason.message))||''))});
+setTimeout(function(){var d=document.getElementById('le');if(!window.__ok&&d&&!d.textContent)show('Page did not start: check firebase-config.js exists and starts with self.FB = {')},4000)})();</script>
 <div id="login" class="lg"><div class="lgc">
-  <img class="logo" src="logo.png" alt="" onerror="this.remove()"><div class="brand">لوحة الطلبات</div><div class="sub">سجّل دخولك للمتابعة</div>
-  <input id="em" type="email" placeholder="الإيميل" dir="ltr" autocomplete="username"><input id="pw" type="password" placeholder="كلمة المرور" dir="ltr" autocomplete="current-password">
-  <button id="in">دخول</button><div id="le" class="er"></div></div></div>
+  <img class="logo" src="logo.png" alt="" onerror="this.remove()"><div class="brand" data-i="title"></div><div class="sub" data-i="signin"></div>
+  <input id="em" type="email" data-p="email" dir="ltr" autocomplete="username"><input id="pw" type="password" data-p="pass" dir="ltr" autocomplete="current-password">
+  <button id="in" data-i="login"></button><div id="le" class="er"></div><button class="ghost" style="color:var(--brown)" id="lang0">English</button></div></div>
 <div id="app" hidden>
-  <header class="top"><div class="who"><img class="logo" style="height:36px" src="logo-light.png" alt="" onerror="this.remove()"><span id="cname">لوحة الطلبات</span></div>
-    <nav><button class="tab on" data-t="orders">الطلبات</button><button class="tab" data-t="set">الإعدادات والباركود</button></nav>
-    <button class="ghost" id="so">خروج</button></header>
+  <header class="top"><div class="who"><img class="logo" style="height:36px" src="logo-light.png" alt="" onerror="this.remove()"><span id="cname"></span></div>
+    <nav><button class="tab on" data-t="orders" data-i="tabOrders"></button><button class="tab" data-t="set" data-i="tabSet"></button></nav>
+    <button class="ghost" id="lang" style="margin-inline-start:auto"></button><button class="ghost" style="margin-inline-start:0" id="so" data-i="logout"></button></header>
   <main class="wrap"><div id="msg"></div>
     <section id="t-orders">
-      <div class="card add"><input id="nn" type="text" inputmode="numeric" autocomplete="off" placeholder="رقم الطلب" aria-label="رقم الطلب">
-        <div class="chips" id="chips" aria-label="الوقت بالدقائق"></div><button id="ad">إضافة الطلب</button></div>
-      <div class="stats"><div class="stat"><b id="s1">0</b>قيد التحضير</div><div class="stat"><b id="s2">0</b>جاهزة للاستلام</div></div>
-      <div class="cols"><div class="col"><h3>قيد التحضير</h3><div id="L1"></div></div><div class="col"><h3>جاهزة للاستلام</h3><div id="L2"></div></div></div>
+      <div class="card add"><input id="nn" type="text" inputmode="numeric" autocomplete="off" data-p="manual">
+        <div class="chips" id="chips"></div><button id="ad" data-i="newOrder"></button></div>
+      <div class="stats"><div class="stat"><b id="s1">0</b><span data-i="prep"></span></div><div class="stat"><b id="s2">0</b><span data-i="ready"></span></div></div>
+      <div class="cols"><div class="col"><h3 data-i="prep"></h3><div id="L1"></div></div><div class="col"><h3 data-i="ready"></h3><div id="L2"></div></div></div>
     </section>
     <section id="t-set" hidden>
-      <div class="card"><h3>اسم الكوفي</h3><div class="row"><input id="cn" style="flex:1;min-width:200px"><button id="sv">حفظ</button></div>
-        <p class="sub">لوقو الكوفي: ارفع ملف باسم logo.png في GitHub بجانب باقي الملفات.</p></div>
-      <div class="card"><h3>باركود الموقع</h3><div class="row"><input id="url" dir="ltr" style="flex:1;min-width:220px"><button id="mq">تحديث</button><button id="pr">طباعة الملصق</button></div><div id="qr"></div></div>
+      <div class="card"><h3 data-i="cafeName"></h3><div class="row"><input id="cn" style="flex:1;min-width:200px"><button id="sv" data-i="save"></button></div>
+        <p class="sub" data-i="logoNote"></p></div>
+      <div class="card"><h3 data-i="nextNo"></h3><div class="row"><input id="nx" type="text" inputmode="numeric" style="width:140px"><button id="sn" data-i="save"></button></div></div>
+      <div class="card"><h3 data-i="qrTitle"></h3><div class="row"><input id="url" dir="ltr" style="flex:1;min-width:220px"><button id="mq" data-i="refresh"></button><button id="pr" data-i="print"></button></div><div id="qr"></div></div>
     </section>
   </main>
 </div>
 <div id="poster" hidden><img class="logo" style="margin:0 auto 10px;height:80px" src="logo.png" alt="" onerror="this.remove()"><div class="brand" id="pn" style="font-size:48px"></div><p style="font-size:22px">امسح الباركود وتابع طلبك من جوالك</p><div id="qr2" style="display:inline-block;background:#fff;padding:12px"></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="firebase-config.js"></script>
+<script>if(typeof FB==="undefined"){var d=document.getElementById("le");if(d)d.textContent="firebase-config.js missing or broken"}</script>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import {getFirestore,doc,setDoc,updateDoc,collection,onSnapshot,query,orderBy,limit} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import {getFirestore,doc,setDoc,updateDoc,collection,onSnapshot,query,orderBy,limit,runTransaction} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 const BAD=/XXXX|YOUR-|0000000000/.test(JSON.stringify(FB.config)),$=i=>document.getElementById(i);
 const esc=s=>String(s).replace(/[<>&"']/g,''),fmt=s=>Math.floor(s/60)+':'+('0'+s%60).slice(-2),secs=e=>Math.max(0,Math.ceil((e-Date.now())/1000));
 const norm=s=>s.replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776).trim();
-const H={'auth/invalid-credential':'الإيميل أو كلمة المرور غلط','auth/invalid-email':'صيغة الإيميل غلط','auth/operation-not-allowed':'فعّل Email/Password من Authentication','auth/unauthorized-domain':'أضف النطاق في Authorized domains','auth/network-request-failed':'مشكلة اتصال','auth/too-many-requests':'محاولات كثيرة، انتظر شوي'};
-let list=[],started=false,mins=10,cafe='',auth,db;
-if(BAD)$('le').textContent='إعدادات Firebase ما انضبطت في ملف firebase-config.js';
+const D={ar:{title:'لوحة الطلبات',signin:'سجّل دخولك للمتابعة',email:'الإيميل',pass:'كلمة المرور',login:'دخول',logout:'خروج',tabOrders:'الطلبات',tabSet:'الإعدادات والباركود',manual:'رقم يدوي (اختياري)',newOrder:'طلب جديد',prep:'قيد التحضير',ready:'جاهزة للاستلام',none:'ما فيه طلبات',rdy:'جاهز',done:'تم التسليم',showQR:'عرض على الآيباد',cafeName:'اسم الكوفي',save:'حفظ',nextNo:'رقم الطلب التالي',qrTitle:'باركود الموقع',refresh:'تحديث',print:'طباعة الملصق',min:'د',logoNote:'لوقو الكوفي: ارفع ملف logo.png في GitHub.',wrong:'الإيميل أو كلمة المرور غلط',perm:'ما عندك صلاحية: تأكد من إيميل الأدمن في قواعد Firestore وانشرها',fail:'تعذر التنفيذ: ',cfg:'إعدادات Firebase ما انضبطت في firebase-config.js'},
+en:{title:'Orders dashboard',signin:'Sign in to continue',email:'Email',pass:'Password',login:'Sign in',logout:'Sign out',tabOrders:'Orders',tabSet:'Settings & QR',manual:'Manual number (optional)',newOrder:'New order',prep:'Preparing',ready:'Ready for pickup',none:'No orders',rdy:'Ready',done:'Delivered',showQR:'Show on iPad',cafeName:'Café name',save:'Save',nextNo:'Next order number',qrTitle:'Site QR code',refresh:'Refresh',print:'Print poster',min:'min',logoNote:'Café logo: upload logo.png to GitHub.',wrong:'Wrong email or password',perm:'No permission: check the admin email in your Firestore rules and publish them',fail:'Failed: ',cfg:'Firebase settings missing in firebase-config.js'}};
+const H={'auth/invalid-credential':'wrong','auth/invalid-email':'wrong'};
+let lang=localStorage.getItem('lang')||'ar',list=[],started=false,mins=10,cafe='',auth,db;
+const t=k=>D[lang][k]||k;
+function applyLang(){localStorage.setItem('lang',lang);document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+  document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));document.querySelectorAll('[data-p]').forEach(e=>e.placeholder=t(e.dataset.p));
+  $('lang').textContent=$('lang0').textContent=lang==='ar'?'English':'عربي';document.title=t('title');$('cname').textContent=cafe||t('title');
+  $('chips').innerHTML=[5,10,15,20,30].map(m=>'<button class="chip'+(m===mins?' on':'')+'" data-m="'+m+'">'+m+' '+t('min')+'</button>').join('');render()}
+$('lang').onclick=$('lang0').onclick=()=>{lang=lang==='ar'?'en':'ar';applyLang()};
+if(BAD)$('le').textContent=t('cfg');
 else{const app=initializeApp(FB.config);auth=getAuth(app);db=getFirestore(app);
   onAuthStateChanged(auth,u=>{$('login').hidden=!!u;$('app').hidden=!u;if(u&&!started){started=true;start()}})}
-const login=()=>{$('le').textContent='';signInWithEmailAndPassword(auth,$('em').value.trim(),$('pw').value).catch(e=>$('le').textContent=(H[e.code]||'خطأ')+' ['+e.code+']')};
+const login=()=>{$('le').textContent='';signInWithEmailAndPassword(auth,$('em').value.trim(),$('pw').value).catch(e=>$('le').textContent=(H[e.code]?t('wrong'):'Error')+' ['+e.code+']')};
 $('in').onclick=login;$('pw').onkeydown=e=>{if(e.key==='Enter')login()};$('so').onclick=()=>signOut(auth);
-const run=async f=>{try{$('msg').textContent='';await f()}catch(e){$('msg').textContent=e.code==='permission-denied'?'ما عندك صلاحية: تأكد إن إيميل الأدمن في firestore.rules مطابق لإيميل دخولك وإنك نشرت القواعد':('تعذر التنفيذ: '+(e.code||e.message))}};
+const run=async f=>{try{$('msg').textContent='';await f()}catch(e){$('msg').textContent=e.code==='permission-denied'?t('perm'):t('fail')+(e.code||e.message)}};
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));$('t-orders').hidden=b.dataset.t!=='orders';$('t-set').hidden=b.dataset.t!=='set'});
-$('chips').innerHTML=[5,10,15,20,30].map(m=>'<button class="chip'+(m===10?' on':'')+'" data-m="'+m+'">'+m+' د</button>').join('');
 $('chips').onclick=e=>{const m=e.target.dataset.m;if(!m)return;mins=+m;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.m===m))};
 function start(){
   $('url').value=location.href.split('?')[0].replace(/admin\.html.*$/,'');
-  onSnapshot(doc(db,'settings','main'),s=>{cafe=s.exists()?s.data().name:'';$('cname').textContent=cafe||'لوحة الطلبات';if(document.activeElement!==$('cn'))$('cn').value=cafe;$('pn').textContent=cafe;mq()},()=>{});
-  onSnapshot(query(collection(db,'orders'),orderBy('createdAt','desc'),limit(100)),s=>{list=s.docs.map(d=>d.data());render()},e=>{$('msg').textContent=e.code==='permission-denied'?'ما عندك صلاحية: تأكد من إيميل الأدمن في firestore.rules وانشر القواعد':e.code});
+  onSnapshot(doc(db,'settings','main'),s=>{cafe=s.exists()?s.data().name:'';$('cname').textContent=cafe||t('title');if(document.activeElement!==$('cn'))$('cn').value=cafe;$('pn').textContent=cafe;mq()},()=>{});
+  onSnapshot(doc(db,'settings','counter'),s=>{if(document.activeElement!==$('nx'))$('nx').value=(s.exists()?s.data().n:0)+1},()=>{});
+  onSnapshot(query(collection(db,'orders'),orderBy('createdAt','desc'),limit(100)),s=>{list=s.docs.map(d=>d.data());render()},e=>{$('msg').textContent=e.code==='permission-denied'?t('perm'):e.code});
   setInterval(tickAll,1000)}
-$('sv').onclick=()=>run(async()=>{await setDoc(doc(db,'settings','main'),{name:$('cn').value.trim()})});
-$('ad').onclick=()=>run(async()=>{const n=norm($('nn').value);if(!n)return;
-  await setDoc(doc(db,'orders',n),{number:n,eta:Date.now()+mins*60000,total:mins*60,status:'preparing',tokens:[],createdAt:Date.now()});$('nn').value='';$('nn').focus()});
-$('nn').onkeydown=e=>{if(e.key==='Enter')$('ad').click()};
+$('sv').onclick=()=>run(()=>setDoc(doc(db,'settings','main'),{name:$('cn').value.trim()}));
+$('sn').onclick=()=>run(()=>setDoc(doc(db,'settings','counter'),{n:Math.max(0,(parseInt(norm($('nx').value))||1)-1)}));
+$('ad').onclick=()=>run(async()=>{let n=norm($('nn').value);
+  if(!n)n=String(await runTransaction(db,async tx=>{const r=doc(db,'settings','counter'),s=await tx.get(r),v=(s.exists()?s.data().n:0)+1;tx.set(r,{n:v});return v}));
+  await setDoc(doc(db,'orders',n),{number:n,eta:Date.now()+mins*60000,total:mins*60,status:'preparing',tokens:[],createdAt:Date.now()});
+  await setDoc(doc(db,'settings','display'),{order:n,at:Date.now()});$('nn').value=''});
 window.adj=(n,d)=>run(async()=>{const o=list.find(x=>x.number===n),eta=Math.max(Date.now()+30000,o.eta+d*60000);await updateDoc(doc(db,'orders',n),{eta,total:Math.max(o.total,secs(eta))})});
 window.st=(n,s)=>run(()=>updateDoc(doc(db,'orders',n),s==='ready'?{status:s,readyAt:Date.now()}:{status:s}));
+window.sh=n=>run(()=>setDoc(doc(db,'settings','display'),{order:n,at:Date.now()}));
 function render(){let a='',b='',x=0,y=0;
   list.filter(o=>o.status==='preparing').sort((p,q)=>p.eta-q.eta).forEach(o=>{x++;const n=esc(o.number);
-    a+='<div class="o"><div class="h"><span class="n">'+n+'</span><span class="c" data-e="'+o.eta+'"></span></div><div class="acts"><button onclick="adj(\''+n+'\',-2)">−2</button><button onclick="adj(\''+n+'\',2)">+2</button><button onclick="adj(\''+n+'\',5)">+5</button><button class="ok" onclick="st(\''+n+'\',\'ready\')">جاهز</button></div></div>'});
+    a+='<div class="o"><div class="h"><span class="n">'+n+'</span><span class="c" data-e="'+o.eta+'"></span></div><div class="acts"><button onclick="adj(\''+n+'\',-2)">−2</button><button onclick="adj(\''+n+'\',2)">+2</button><button onclick="adj(\''+n+'\',5)">+5</button><button onclick="sh(\''+n+'\')">'+t('showQR')+'</button><button class="ok" onclick="st(\''+n+'\',\'ready\')">'+t('rdy')+'</button></div></div>'});
   list.filter(o=>o.status==='ready').forEach(o=>{y++;const n=esc(o.number);
-    b+='<div class="o done"><div class="h"><span class="n">'+n+'</span><button onclick="st(\''+n+'\',\'picked\')">تم التسليم</button></div></div>'});
-  $('L1').innerHTML=a||'<div class="empty">ما فيه طلبات قيد التحضير</div>';$('L2').innerHTML=b||'<div class="empty">ما فيه طلبات جاهزة</div>';
+    b+='<div class="o done"><div class="h"><span class="n">'+n+'</span><button onclick="st(\''+n+'\',\'picked\')">'+t('done')+'</button></div></div>'});
+  $('L1').innerHTML=a||'<div class="empty">'+t('none')+'</div>';$('L2').innerHTML=b||'<div class="empty">'+t('none')+'</div>';
   $('s1').textContent=x;$('s2').textContent=y;tickAll()}
 function tickAll(){document.querySelectorAll('[data-e]').forEach(e=>e.textContent=fmt(secs(+e.dataset.e)))}
 function mq(){if(!window.QRCode)return;['qr','qr2'].forEach(id=>{$(id).innerHTML='';new QRCode($(id),{text:$('url').value,width:id==='qr'?200:300,height:id==='qr'?200:300})})}
 $('mq').onclick=mq;$('pr').onclick=()=>{mq();$('poster').hidden=false;print();$('poster').hidden=true};
+applyLang();window.__ok=1;
 </script></body></html>

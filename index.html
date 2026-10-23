@@ -11,7 +11,7 @@
 .pager{animation:shake .6s infinite;transform-origin:50% 90%}
 @keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
 @media(prefers-reduced-motion:reduce){.pager{animation:none}}
-</style></head><body>
+.cup{font-size:90px;background:none;padding:0;line-height:1}</style></head><body>
 <main class="scr" id="scr">
   <header class="chead"><img class="logo big" src="logo.png" alt="قاهي" onload="document.getElementById('bn').hidden=true" onerror="this.remove()"><div class="brand" id="bn"></div></header>
   <section class="mid" id="v-in">
@@ -24,8 +24,10 @@
     <div class="sub">طلب رقم <b id="wn"></b></div>
     <div class="ring"><svg width="220" height="220"><circle cx="110" cy="110" r="100" fill="none" stroke="#dccfb4" stroke-width="10"/><circle id="arc" cx="110" cy="110" r="100" fill="none" stroke="#586d54" stroke-width="10" stroke-linecap="round"/></svg><div class="in"><div class="t" id="cd"></div><div class="sub">الوقت المتوقع</div></div></div>
     <div class="sub" id="ps"></div>
+    <button class="cta" id="play">العب وأنت تنتظر</button>
     <div class="row2"><button class="ghost" id="another">تتبع طلب آخر</button><button class="ghost" id="cancel">إلغاء المتابعة</button></div>
   </section>
+  <section class="mid" id="v-game" hidden><div style="font-size:24px;font-weight:700">اضغط الفنجان!</div><div class="sub" id="gsc"></div><button class="cup" id="cup" aria-label="فنجان">&#9749;</button><button class="ghost" id="gb">رجوع</button></section>
   <section class="mid" id="v-ready" hidden>
     <div style="font-size:28px;font-weight:700">طلبك جاهز</div><svg class="pager" viewBox="0 0 200 240" width="230" role="img" aria-label="البيجر"><rect x="88" y="4" width="24" height="46" rx="10" fill="#f1e6d0"/><rect x="20" y="40" width="160" height="196" rx="38" fill="#f1e6d0"/><rect x="42" y="62" width="116" height="92" rx="18" fill="#934713"/><text id="rn" x="100" y="123" text-anchor="middle" font-size="58" font-weight="700" fill="#f1e6d0" font-family="Reem Kufi,Tajawal,sans-serif"></text><circle cx="100" cy="194" r="18" fill="#586d54"/></svg><div>تفضل بالاستلام من الكاونتر</div>
     <button class="cta" style="background:#f1e6d0;color:#934713" id="got">استلمت طلبي</button>
@@ -38,16 +40,16 @@
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import {getFirestore,doc,getDoc,onSnapshot,updateDoc,arrayUnion} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import {getMessaging,getToken,isSupported} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js';
-const PUSH_ENABLED=false; // غيّرها إلى true بعد ما تفعّل Blaze وتنشر الدالة
+const PUSH_ENABLED=true; // غيّرها إلى true بعد ما تفعّل Blaze وتنشر الدالة
 const $=i=>document.getElementById(i),C=2*Math.PI*100,BAD=/XXXX|YOUR-|0000000000/.test(JSON.stringify(FB.config));
-let app,db,mine=null,state=null,unsub=null,ac=null,alarm=null,push=false;
+let gt=null,gs=0,gl=10,app,db,mine=null,state=null,unsub=null,ac=null,alarm=null,push=false;
 $('arc').setAttribute('stroke-dasharray',C);
 const fmt=s=>Math.floor(s/60)+':'+('0'+s%60).slice(-2),left=()=>Math.max(0,Math.ceil((state.eta-Date.now())/1000));
 const norm=s=>s.replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776).trim();
 const T=p=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r({code:'timeout'}),8000))]);
 const err=m=>$('er').textContent=m;
 if(/iphone|ipad/i.test(navigator.userAgent)&&!(navigator.standalone||matchMedia('(display-mode: standalone)').matches))$('ios').hidden=false;
-function show(v){const lg=document.querySelector('.chead .logo');if(lg)lg.src=v==='ready'?'logo-light.png':'logo.png';['in','wait','ready'].forEach(x=>$('v-'+x).hidden=x!==v);$('scr').className='scr'+(v==='ready'?' ready':'')}
+function show(v){const lg=document.querySelector('.chead .logo');if(lg)lg.src=v==='ready'?'logo-light.png':'logo.png';if(v!=='game')clearInterval(gt);['in','wait','ready','game'].forEach(x=>$('v-'+x).hidden=x!==v);$('scr').className='scr'+(v==='ready'?' ready':'')}
 function unlock(){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();ac.resume()}catch(e){}}
 addEventListener('pointerdown',unlock);
 function chime(){if(!ac)return;[880,1175,1568].forEach((f,i)=>{const t=ac.currentTime+i*.22,o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.35,t+.03);g.gain.exponentialRampToValueAtTime(.001,t+.6);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.65)})}
@@ -69,13 +71,16 @@ async function track(n){n=norm(n||$('in').value);if(!n)return;unlock();if(BAD)re
   unsub=onSnapshot(doc(db,'orders',n),x=>{state=x.exists()?x.data():null;
     if(!state||state.status==='picked'){leave();return}
     if(state.status==='ready'){startAlarm();$('rn').textContent=mine;show('ready')}
-    else{$('wn').textContent=mine;$('ps').textContent=push?'التنبيهات مفعّلة، تقدر تقفل الشاشة':'أبقِ هذي الصفحة مفتوحة ليشتغل الصوت والتنبيه';show('wait');tick()}});
+    else{$('wn').textContent=mine;$('ps').textContent=push?'التنبيهات مفعّلة، تقدر تقفل الشاشة':'أبقِ هذي الصفحة مفتوحة ليشتغل الصوت والتنبيه';if($('v-game').hidden)show('wait');tick()}});
   if(PUSH_ENABLED)enablePush(n)}
 function leave(){stopAlarm();unsub&&unsub();mine=null;state=null;localStorage.removeItem('order');$('in').value='';err('');show('in')}
 async function enablePush(n){try{if(!(await isSupported()))throw 0;if(await Notification.requestPermission()!=='granted')throw 0;
   const reg=await navigator.serviceWorker.register('firebase-messaging-sw.js');
   const t=await getToken(getMessaging(app),{vapidKey:FB.vapidKey,serviceWorkerRegistration:reg});
   await updateDoc(doc(db,'orders',n),{tokens:arrayUnion(t)});push=true;$('ps').textContent='التنبيهات مفعّلة، تقدر تقفل الشاشة'}catch(e){push=false}}
-$('go').onclick=()=>track();$('in').onkeydown=e=>{if(e.key==='Enter')track()};$('got').onclick=leave;$('another').onclick=leave;$('cancel').onclick=leave;$('ok').onclick=()=>{$('silent').hidden=true;unlock()};
+$('go').onclick=()=>track();$('in').onkeydown=e=>{if(e.key==='Enter')track()};$('play').onclick=()=>{gs=0;gl=10;$('gsc').textContent='الوقت 10 · النقاط 0';show('game');gt=setInterval(()=>{gl--;$('gsc').textContent=gl>0?'الوقت '+gl+' · النقاط '+gs:'انتهى! جبت '+gs+' نقطة';if(gl<=0)clearInterval(gt)},1000)};
+$('cup').onclick=()=>{if(gl>0){gs++;$('gsc').textContent='الوقت '+gl+' · النقاط '+gs}};
+$('gb').onclick=()=>show(state&&state.status==='ready'?'ready':'wait');
+$('got').onclick=leave;$('another').onclick=leave;$('cancel').onclick=leave;$('ok').onclick=()=>{$('silent').hidden=true;unlock()};
 show('in');
 </script></body></html>
